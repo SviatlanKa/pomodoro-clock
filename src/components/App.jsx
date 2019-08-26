@@ -6,43 +6,33 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            timeLeft: '25',
             break: 5,
-            session: 25,
-            isBreak: false
+            session: 25
         }
-        this.handleClickTimerLength = this.handleClickTimerLength.bind(this);
-        this.handleClickTimer = this.handleClickTimer.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClickTimerLength(value, valueName) {
-        const timeLeft = !this.state.isBreak && valueName === 'session' ? `${value}` : this.state.timeLeft;
-        this.setState({ timeLeft, [valueName]: value });
-    }
-
-    handleClickTimer() {
-
+    handleClick(valueName, value) {
+        this.setState({ [valueName]: value });
     }
 
     render() {
-        const timer = this.state.isBreak ? this.state.break : this.state.session;
-
-
         return(
             <div>
                 <TimeLength
-                    length={this.state.break}
                     stateName="break"
-                    onHandleClick={this.handleClickTimerLength}
+                    length={this.state.break}
+                    onHandleClick={this.handleClick}
                 />
                 <Timer
-                    timerLeft={timer}
-                    onHanldeClick={this.handleClickTimer}
+                    break={this.state.break}
+                    session={this.state.session}
+                    onHandleClick={this.handleClick()}
                 />
                 <TimeLength
-                    length={this.state.session}
                     stateName="session"
-                    onHandleClick={this.handleClickTimerLength}
+                    length={this.state.session}
+                    onHandleClick={this.handleClick}
                 />
             </div>
         )
