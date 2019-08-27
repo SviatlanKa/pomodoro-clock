@@ -7,7 +7,10 @@ class App extends Component {
         super(props);
         this.state = {
             break: 5,
-            session: 25
+            session: 25,
+            isPlay: false,
+            isPause: false,
+            isReset: false
         }
         this.handleClick = this.handleClick.bind(this);
     }
@@ -27,7 +30,10 @@ class App extends Component {
                 <Timer
                     break={this.state.break}
                     session={this.state.session}
-                    onHandleClick={this.handleClick()}
+                    isPlay={this.state.isPlay}
+                    isPause={this.state.isPause}
+                    isReset={this.state.isReset}
+                    onHandleClick={this.handleClick}
                 />
                 <TimeLength
                     stateName="session"

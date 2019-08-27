@@ -7,65 +7,77 @@ class Timer extends Component {
         super(props);
         this.state = {
             timeLeft: {
-                minutes: '25',
+                minutes: this.props.session,
                 seconds: '00'
-            },
-            isStart: false,
-            isPause: false
+            }
         }
         this.handleClick = this.handleClick.bind(this);
         this.tickTime = this.tickTime.bind(this);
     }
 
-    handleClick(e) {
-        let { timeLeft, isStart, isPause } = this.props;
-        let timerId;
-        if (e.target.id === "start-stop") {
-           if (!isStart || isPause) {
-               timerId = setTimeOut((this.tickTime => {
-                   timerId = setTimeOut(this.tickTime(), 1000)
-               }), 1000);
-               isStart = !isStart ? true : false;
-               isPause = isPause ? false : true;
-           }
-        } else if (e.target.id === "reset") {
-            timeLeft = { minutes: '25', seconds: '00' };
-            this.props.onHandleClick(25, "session");
-            this.props.onHandleClick(5, "break");
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.session !== prevProps.session) {
+            this.setState({ timeLeft: {
+                minutes: this.props.session,
+                seconds: '00'
+                }
+            })
         }
-        this.setState()
+    }
+
+    handleClick(e) {
+        let { minutes, seconds } = this.state.timeLeft;
+        let { isPlay, isPause, isReset } = this.props;
+        const id = e.currentTarget.id;
+        console.log(`e.target.id: ${id}`);
+        if (id === "start-stop") {
+            if (!isPlay && !isPause) {
+                this.props.onHandleClick("isPlay", !isPlay);
+                this.interval = setInterval(this.tickTime, 1000);
+            } else if ((isPlay && !isPause) || (!isPlay && isPause)) {
+                this.props.onHandleClick("isPlay", !isPlay);
+                this.props.onHandleClick("isPause", !isPause);
+                clearInterval(this.interval);
+            }
+        } else if (id==="reset") {
+            this.props.onHandleClick("session", 25);
+            seconds = '00';
+            this.setState({ seconds });
+        }
     }
 
     tickTime() {
-        let { minutes, seconds } = this.state;
-        let interval = (minutes * 60 + seconds) * 1000;
-        while (interval > 0) {
+        let { minutes, seconds } = this.state.timeLeft;
+        console.log(this.state.timeLeft);
+        let interval = minutes * 60 + parseInt(seconds);
+        console.log(interval);
+        if (interval > 0) {
             interval--;
+            console.log(`interval: ${interval}`);
+            seconds = (interval) % 60;
+            console.log(`seconds: ${seconds}`);
+            minutes = Math.floor(interval / 60) % 60;
+            console.log(`minutes: ${minutes}`);
+            this.setState({ minutes, seconds });
+            console.log(this.state);
         }
-        seconds = (interval / 1000) % 60;
-        minutes = (interval / (1000 * 60)) % 60;
-        this.setState({ minutes, seconds });
     }
 
     render() {
-        console.log(this.props);
+        console.log(`props from render: ${this.props.isPlay}`);
+        const { minutes, seconds } = this.state.timeLeft;
+        const icon = this.props.isPlay ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faPlay} />;
         return(
             <div>
                 <div>
-                    <span>{this.state.timeLeft.minutes}</span>
-                    <span>{this.state.timeLeft.seconds}</span>
-                    </div>
-                <button
-                    id="start-stop"
-                    onClick={this.handleClick}
-                > {
-                    this.props.isPause ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faPlay} />
-                }
+                    <span>{minutes}</span>
+                    <span>:</span>
+                    <span>{seconds}</span>
+                </div>
+                <button id="start-stop" onClick={this.handleClick}>
+                    {icon}
                 </button>
-                <button
-                    id="reset"
-                    onClick={this.handleClick}
-                >
+                <button id="reset" onClick={this.handleClick}>
                     <FontAwesomeIcon icon={faRedoAlt} />
                 </button>
 

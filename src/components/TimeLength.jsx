@@ -8,7 +8,7 @@ class TimeLength extends Component {
 
     handleClick(e) {
         let { stateName, length } = this.props;
-        if (length < 60) {
+        if (length > 0 && length < 60) {
             length = e.target.id.includes('increment') ? length + 1 : length - 1;
             this.props.onHandleClick(stateName, length);
         }
