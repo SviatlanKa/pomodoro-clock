@@ -20,8 +20,8 @@ class App extends Component {
 
     render() {
         return(
-            <div>
-                <h1 className="title">Pomodoro Clock</h1>
+            <div className="app-container">
+                <p className="title">Pomodoro Clock</p>
                 <TimeLength
                     stateName="break"
                     length={this.state.breakLength}

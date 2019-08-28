@@ -1,55 +1,70 @@
 @import url('https://fonts.googleapis.com/css?family=Assistant|Raleway&display=swap');
 * {
-  border: solid 1px green;
+  //border: solid 1px green;
 }
+/*Variables*/
+$width: 50vw;
+$small-width: $width * .3;
+$time-font: 'Assistant', san-serif;
+$time-size-length: 1em;
+
 body {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   box-sizing: border-box;
-  width: 50vw;
+  width: $width;
   font-family: "Raleway", sans-serif;
   font-size: 1.5em;
   text-align: center;
 }
 
+.app-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+}
+
 .title {
+  width: $width;
+  font-size: 2em;
+  font-weight: bold;
   color: crimson;
 }
 
-/*Variables*/
 
 
 .time-length-container, .timer-container {
-
+  width: $small-width;
+  margin: $width * .01;
 }
 
 .time-length-container {
-
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   .length-label {
-
+    width: $small-width;
   }
   .length-btn {
 
   }
   .time-length {
-
+    font-family: $time-font;
   }
 }
 
 .timer-container {
-  width: 300px;
-  height: 300px;
+  width: $small-width;
+  height: $small-width;
   border-radius: 50%;
   .timer-label {
 
   }
   #timer-left {
+    font-family: $time-font;
     span {
 
     }
