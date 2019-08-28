@@ -7,29 +7,39 @@ class TimeLength extends Component {
     }
 
     handleClick(e) {
-        let { stateName, length } = this.props;
-        if (length > 0 && length < 60) {
-            length = e.target.id.includes('increment') ? length + 1 : length - 1;
+        let { length, isPlay } = this.props;
+        const stateName = this.props.stateName + 'Length';
+        if (length >= 0 && length < 60 && !isPlay) {
+            if (e.target.id.includes('increment')) {
+                length++;
+            } else {
+                length = length > 0 ? length - 1 : 0;
+            }
             this.props.onHandleClick(stateName, length);
         }
     }
 
     render() {
-        const idDec = `${this.props.stateName}-decrement`;
-        const idInc = `${this.props.stateName}-increment`;
+        const { stateName } = this.props;
+        const idDec = `${stateName}-decrement`;
+        const idInc = `${stateName}-increment`;
+        const idLength = `${stateName}-length`;
+        const idLabel = `${stateName}-label`;
+        const textLabel = stateName === 'break' ? 'Break Length' : 'Session Length';
         return(
-            <div>
-                <button
-                    id={idDec}
+            <div className="time-length-container">
+                <p id={idLabel} className="length-label">{textLabel}</p>
+                <button id={idDec}
+                    className="length-btn"
                     onClick={this.handleClick}
                 >
                     -
                 </button>
-                <div>
+                <div id={idLength} className="time-length">
                     {this.props.length}
                 </div>
-                <button
-                    id={idInc}
+                <button id={idInc}
+                    className="length-btn"
                     onClick={this.handleClick}
                 >
                     +

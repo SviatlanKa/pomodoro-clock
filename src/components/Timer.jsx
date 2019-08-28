@@ -1,86 +1,96 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faPause, faRedoAlt } from '@fortawesome/free-solid-svg-icons';
+import beepSound from '../media/beep.mp3';
 
 class Timer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            timeLeft: {
-                minutes: this.props.session,
-                seconds: '00'
-            }
+            minutes: this.props.sessionLength,
+            seconds: '00',
+            isBreak: false
         }
         this.handleClick = this.handleClick.bind(this);
         this.tickTime = this.tickTime.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.session !== prevProps.session) {
-            this.setState({ timeLeft: {
-                minutes: this.props.session,
-                seconds: '00'
-                }
-            })
+        if (this.props.sessionLength !== prevProps.sessionLength) {
+            this.setState({ minutes: this.props.sessionLength, seconds: '00' });
         }
     }
 
     handleClick(e) {
-        let { minutes, seconds } = this.state.timeLeft;
-        let { isPlay, isPause, isReset } = this.props;
+        let { minutes, seconds } = this.state;
+        let { isPlay } = this.props;
         const id = e.currentTarget.id;
-        console.log(`e.target.id: ${id}`);
         if (id === "start-stop") {
-            if (!isPlay && !isPause) {
-                this.props.onHandleClick("isPlay", !isPlay);
+            if (!isPlay) {
                 this.interval = setInterval(this.tickTime, 1000);
-            } else if ((isPlay && !isPause) || (!isPlay && isPause)) {
-                this.props.onHandleClick("isPlay", !isPlay);
-                this.props.onHandleClick("isPause", !isPause);
+            } else {
                 clearInterval(this.interval);
             }
+            this.props.onHandleClick("isPlay", !isPlay);
         } else if (id==="reset") {
-            this.props.onHandleClick("session", 25);
+            clearInterval(this.interval);
+            this.props.onHandleClick("sessionLength", 25);
+            this.props.onHandleClick("breakLength", 5);
+            this.props.onHandleClick("isPlay", false);
+            minutes = '25';
             seconds = '00';
-            this.setState({ seconds });
+            this.setState({ minutes, seconds });
         }
     }
 
     tickTime() {
-        let { minutes, seconds } = this.state.timeLeft;
-        console.log(this.state.timeLeft);
+        let { minutes, seconds, isBreak } = this.state;
+        let { breakLength, sessionLength } = this.props;
         let interval = minutes * 60 + parseInt(seconds);
-        console.log(interval);
+        const audio = new Audio(beepSound);
+
         if (interval > 0) {
             interval--;
-            console.log(`interval: ${interval}`);
             seconds = (interval) % 60;
-            console.log(`seconds: ${seconds}`);
             minutes = Math.floor(interval / 60) % 60;
-            console.log(`minutes: ${minutes}`);
             this.setState({ minutes, seconds });
-            console.log(this.state);
+        } else {
+            if (isBreak) {
+                this.setState({ minutes: sessionLength, seconds: '00' });
+            } else {
+                this.setState({ minutes: breakLength, seconds: '00' });
+            }
+            audio.play();
+            this.setState({ isBreak: !isBreak });
         }
     }
 
     render() {
-        console.log(`props from render: ${this.props.isPlay}`);
-        const { minutes, seconds } = this.state.timeLeft;
-        const icon = this.props.isPlay ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faPlay} />;
+        const { minutes, seconds, isBreak } = this.state;
+        const { isPlay } = this.props;
+        const icon = isPlay ? <FontAwesomeIcon icon={faPause} /> : <FontAwesomeIcon icon={faPlay} />;
+        const timerLabel = isBreak ? 'Break' : 'Session';
+
         return(
-            <div>
+            <div className="timer-container">
                 <div>
-                    <span>{minutes}</span>
-                    <span>:</span>
-                    <span>{seconds}</span>
+                    <p id="timer-label">{timerLabel}</p>
+                    <div id="timer-left">
+                        <span>{minutes}</span>
+                        <span>:</span>
+                        <span>{seconds}</span>
+                    </div>
                 </div>
-                <button id="start-stop" onClick={this.handleClick}>
+                <button id="start-stop"
+                        className="timer-btn"
+                        onClick={this.handleClick}>
                     {icon}
                 </button>
-                <button id="reset" onClick={this.handleClick}>
+                <button id="reset"
+                        className="timer-btn"
+                        onClick={this.handleClick}>
                     <FontAwesomeIcon icon={faRedoAlt} />
                 </button>
-
             </div>
         )
     }

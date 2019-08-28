@@ -6,38 +6,38 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            break: 5,
-            session: 25,
-            isPlay: false,
-            isPause: false,
-            isReset: false
+            breakLength: 5,
+            sessionLength: 25,
+            isPlay: false
         }
         this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick(valueName, value) {
+        console.log(`stateName: ${valueName}, value: ${value}`);
         this.setState({ [valueName]: value });
     }
 
     render() {
         return(
             <div>
+                <h1 className="title">Pomodoro Clock</h1>
                 <TimeLength
                     stateName="break"
-                    length={this.state.break}
+                    length={this.state.breakLength}
+                    isPlay={this.state.isPlay}
                     onHandleClick={this.handleClick}
                 />
                 <Timer
-                    break={this.state.break}
-                    session={this.state.session}
+                    breakLength={this.state.breakLength}
+                    sessionLength={this.state.sessionLength}
                     isPlay={this.state.isPlay}
-                    isPause={this.state.isPause}
-                    isReset={this.state.isReset}
                     onHandleClick={this.handleClick}
                 />
                 <TimeLength
                     stateName="session"
-                    length={this.state.session}
+                    length={this.state.sessionLength}
+                    isPlay={this.state.isPlay}
                     onHandleClick={this.handleClick}
                 />
             </div>
