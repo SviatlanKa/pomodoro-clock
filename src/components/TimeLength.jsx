@@ -29,21 +29,21 @@ class TimeLength extends Component {
         return(
             <div className="time-length-container">
                 <p id={idLabel} className="length-label">{textLabel}</p>
-                <button id={idDec}
-                    className="length-btn"
-                    onClick={this.handleClick}
-                >
-                    -
-                </button>
-                <div id={idLength} className="time-length">
-                    {this.props.length}
+                <div className="time-length-group">
+                    <button id={idDec}
+                        className="length-btn"
+                        onClick={this.handleClick}
+                    >
+                        -
+                    </button>
+                    <p id={idLength} className="time-length">{this.props.length}</p>
+                    <button id={idInc}
+                        className="length-btn"
+                        onClick={this.handleClick}
+                    >
+                        +
+                    </button>
                 </div>
-                <button id={idInc}
-                    className="length-btn"
-                    onClick={this.handleClick}
-                >
-                    +
-                </button>
             </div>
         )
     }

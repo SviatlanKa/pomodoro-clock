@@ -73,7 +73,7 @@ class Timer extends Component {
 
         return(
             <div className="timer-container">
-                <div>
+                <div className="label-container">
                     <p id="timer-label">{timerLabel}</p>
                     <div id="timer-left">
                         <span>{minutes}</span>
@@ -81,16 +81,18 @@ class Timer extends Component {
                         <span>{seconds}</span>
                     </div>
                 </div>
-                <button id="start-stop"
-                        className="timer-btn"
-                        onClick={this.handleClick}>
-                    {icon}
-                </button>
-                <button id="reset"
-                        className="timer-btn"
-                        onClick={this.handleClick}>
-                    <FontAwesomeIcon icon={faRedoAlt} />
-                </button>
+                <div className="btn-container">
+                    <button id="start-stop"
+                            className="timer-btn"
+                            onClick={this.handleClick}>
+                        {icon}
+                    </button>
+                    <button id="reset"
+                            className="timer-btn"
+                            onClick={this.handleClick}>
+                        <FontAwesomeIcon icon={faRedoAlt} />
+                    </button>
+                </div>
             </div>
         )
     }
