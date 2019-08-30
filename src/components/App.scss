@@ -27,7 +27,7 @@ body {
   justify-content: center;
   align-content: flex-start;
   border-radius: 36px;
-  box-shadow: 5px 5px 15px 5px #5B5B5B;
+  box-shadow: 2px 2px 15px 2px rgba(0,0,0,0.66);
 }
 
 .title {
@@ -49,8 +49,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 5%;
-  box-shadow: 5px 5px 15px 5px #5B5B5B;
+  border-radius: 12px;
+  box-shadow: 2px 2px 15px 2px rgba(0,0,0,0.66);
 
   .length-label {
     margin: 0;
@@ -70,11 +70,14 @@ body {
       height: $length-btn-width;
       font-size: .9em;
       border-radius: 50%;
+      border: none;
       outline: none;
+      background: rgb(255,252,252);
+      background: linear-gradient(to bottom, rgb(255,252,252) 0%, rgb(222,222,222) 42%, rgb(194,194,194) 100%);
+      box-shadow: 1px 1px 5px 1px rgba(0,0,0,0.66);
     }
     .time-length {
       width: $small-width * .3;
-      //border: 1px solid green;
       margin: 0;
       font-family: $time-font-family;
       font-size: 2em;
@@ -90,7 +93,7 @@ body {
   border-radius: 50%;
   background: rgb(203,67,53);
   background: linear-gradient(to top, rgb(203,67,53) 0%, rgb(231,76,60) 50%, rgb(236,112,99) 100%);
-  box-shadow: 5px 5px 15px 5px #5B5B5B;
+  box-shadow: 2px 2px 15px 2px rgba(0,0,0,0.66);
 
   .label-container {
     #timer-label {
