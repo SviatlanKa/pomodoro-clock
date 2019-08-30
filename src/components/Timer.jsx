@@ -7,17 +7,19 @@ class Timer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            minutes: this.props.sessionLength,
+            minutes: '25',
             seconds: '00',
             isBreak: false
         }
         this.handleClick = this.handleClick.bind(this);
         this.tickTime = this.tickTime.bind(this);
+        this.checkSessionByZero = this.checkSessionByZero.bind(this);
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps) {
         if (this.props.sessionLength !== prevProps.sessionLength) {
-            this.setState({ minutes: this.props.sessionLength, seconds: '00' });
+            const minutes = this.checkSessionByZero(this.props.sessionLength);
+            this.setState({ minutes, seconds: '00' });
         }
     }
 
@@ -45,24 +47,31 @@ class Timer extends Component {
 
     tickTime() {
         let { minutes, seconds, isBreak } = this.state;
-        let { breakLength, sessionLength } = this.props;
-        let interval = minutes * 60 + parseInt(seconds);
+        const breakLengthToStr = this.props.breakLength;
+        const sessionLengthToStr = this.props.sessionLength;
+        let interval = parseInt(minutes) * 60 + parseInt(seconds);
         const audio = new Audio(beepSound);
 
         if (interval > 0) {
             interval--;
             seconds = (interval) % 60;
+            seconds = this.checkSessionByZero(seconds);
             minutes = Math.floor(interval / 60) % 60;
+            minutes = this.checkSessionByZero(minutes);
             this.setState({ minutes, seconds });
         } else {
             if (isBreak) {
-                this.setState({ minutes: sessionLength, seconds: '00' });
+                this.setState({ minutes: sessionLengthToStr, seconds: '00' });
             } else {
-                this.setState({ minutes: breakLength, seconds: '00' });
+                this.setState({ minutes: breakLengthToStr, seconds: '00' });
             }
             audio.play();
             this.setState({ isBreak: !isBreak });
         }
+    }
+
+    checkSessionByZero(value) {
+        return value < 10 ? `0${value}` : value.toString();
     }
 
     render() {
