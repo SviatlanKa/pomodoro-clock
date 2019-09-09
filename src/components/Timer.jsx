@@ -24,7 +24,7 @@ class Timer extends Component {
     }
 
     handleClick(e) {
-        let { minutes, seconds } = this.state;
+        let { minutes, seconds, isBreak } = this.state;
         let { isPlay } = this.props;
         const id = e.currentTarget.id;
         if (id === "start-stop") {
@@ -35,22 +35,29 @@ class Timer extends Component {
             }
             this.props.onHandleClick("isPlay", !isPlay);
         } else if (id==="reset") {
+            const audio = document.getElementById('beep');
             clearInterval(this.interval);
+            console.log(audio);
+            if (audio.currentTime > 0 && !audio.paused) {
+                audio.pause();
+                audio.currentTime = 0;
+            }
             this.props.onHandleClick("sessionLength", 25);
             this.props.onHandleClick("breakLength", 5);
             this.props.onHandleClick("isPlay", false);
             minutes = '25';
             seconds = '00';
-            this.setState({ minutes, seconds });
+            isBreak = false;
+            this.setState({ minutes, seconds, isBreak });
         }
     }
 
     tickTime() {
         let { minutes, seconds, isBreak } = this.state;
-        const breakLengthToStr = this.props.breakLength;
-        const sessionLengthToStr = this.props.sessionLength;
+        const { breakLength, sessionLength } = this.props;
+        const breakLengthToStr = this.checkSessionByZero(breakLength);
+        const sessionLengthToStr = sessionLength;
         let interval = parseInt(minutes) * 60 + parseInt(seconds);
-        const audio = new Audio(beepSound);
 
         if (interval > 0) {
             interval--;
@@ -65,7 +72,7 @@ class Timer extends Component {
             } else {
                 this.setState({ minutes: breakLengthToStr, seconds: '00' });
             }
-            audio.play();
+            document.getElementById('beep').play();
             this.setState({ isBreak: !isBreak });
         }
     }
@@ -84,6 +91,9 @@ class Timer extends Component {
             <div className="timer-container">
                 <div className="label-container">
                     <p id="timer-label">{timerLabel}</p>
+                    <audio id="beep">
+                        <source src={beepSound} type="audio/mpeg"/>
+                    </audio>
                     <div id="timer-left">
                         <span>{minutes}</span>
                         <span>:</span>
