@@ -13,12 +13,12 @@ class Timer extends Component {
         }
         this.handleClick = this.handleClick.bind(this);
         this.tickTime = this.tickTime.bind(this);
-        this.checkSessionByZero = this.checkSessionByZero.bind(this);
+        this.checkTimeLengthByZero = this.checkTimeLengthByZero.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.sessionLength !== prevProps.sessionLength) {
-            const minutes = this.checkSessionByZero(this.props.sessionLength);
+            const minutes = this.checkTimeLengthByZero(this.props.sessionLength);
             this.setState({ minutes, seconds: '00' });
         }
     }
@@ -35,10 +35,9 @@ class Timer extends Component {
             }
             this.props.onHandleClick("isPlay", !isPlay);
         } else if (id==="reset") {
-            const audio = document.getElementById('beep');
             clearInterval(this.interval);
-            console.log(audio);
-            if (audio.currentTime > 0 && !audio.paused) {
+            const audio = document.getElementById('beep');
+            if (audio.currentTime > 0) {
                 audio.pause();
                 audio.currentTime = 0;
             }
@@ -55,16 +54,16 @@ class Timer extends Component {
     tickTime() {
         let { minutes, seconds, isBreak } = this.state;
         const { breakLength, sessionLength } = this.props;
-        const breakLengthToStr = this.checkSessionByZero(breakLength);
-        const sessionLengthToStr = sessionLength;
+        const breakLengthToStr = this.checkTimeLengthByZero(breakLength);
+        const sessionLengthToStr = this.checkTimeLengthByZero(sessionLength);
         let interval = parseInt(minutes) * 60 + parseInt(seconds);
 
         if (interval > 0) {
             interval--;
             seconds = (interval) % 60;
-            seconds = this.checkSessionByZero(seconds);
+            seconds = this.checkTimeLengthByZero(seconds);
             minutes = Math.floor(interval / 60) % 60;
-            minutes = this.checkSessionByZero(minutes);
+            minutes = this.checkTimeLengthByZero(minutes);
             this.setState({ minutes, seconds });
         } else {
             if (isBreak) {
@@ -77,7 +76,7 @@ class Timer extends Component {
         }
     }
 
-    checkSessionByZero(value) {
+    checkTimeLengthByZero(value) {
         return value < 10 ? `0${value}` : value.toString();
     }
 
