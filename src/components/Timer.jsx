@@ -37,10 +37,8 @@ class Timer extends Component {
         } else if (id==="reset") {
             clearInterval(this.interval);
             const audio = document.getElementById('beep');
-            if (audio.currentTime > 0) {
-                audio.pause();
-                audio.currentTime = 0;
-            }
+            audio.pause();
+            audio.currentTime = 0;
             this.props.onHandleClick("sessionLength", 25);
             this.props.onHandleClick("breakLength", 5);
             this.props.onHandleClick("isPlay", false);
